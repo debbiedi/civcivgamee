@@ -31,6 +31,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private Key _normalModeKey = Key.Q;
     [SerializeField] private Key _slidingModeKey = Key.E;
     [SerializeField] private float _slideMultiplier = 2f;
+    [SerializeField] private float _slideStartDuration = 0.3f; // Başlangıç animasyonunun süresi
     
     [Header("Drag (Sürtünme) Settings")]
     [SerializeField] private float _normalDrag = 5f; // Normal modda yere daha çok tutunur
@@ -38,7 +39,9 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float _airDrag = 0f;    // Havadayken sürtünme olmasın ki zıplama düzgün çalışsın
     
     private bool _isSlidingMode;
+    private float _slideStartTimer;
 
+    private StateController _stateController;
     private Rigidbody _playerRigidbody;
     private bool _isGrounded;
     private float _horizontalInput;
@@ -48,6 +51,7 @@ public class PlayerController : MonoBehaviour
     private void Awake()
     {
         _playerRigidbody = GetComponent<Rigidbody>();
+        _stateController = GetComponent<StateController>();
         _playerRigidbody.freezeRotation = true;
     }
 
@@ -91,8 +95,18 @@ public class PlayerController : MonoBehaviour
             // Kayma Moduna geçiş (E)
             if (Keyboard.current[_slidingModeKey].wasPressedThisFrame)
             {
+                if (!_isSlidingMode) // Yeniden tuşa basıp süreyi resetlememesi için
+                {
+                    _slideStartTimer = _slideStartDuration; 
+                }
                 _isSlidingMode = true;
             }
+        }
+
+        // Timer'ı düşür
+        if (_slideStartTimer > 0)
+        {
+            _slideStartTimer -= Time.deltaTime;
         }
 
         // --- YUMUŞAK ROTASYON KISMI (Update içinde daha akıcı çalışır) ---
@@ -102,6 +116,40 @@ public class PlayerController : MonoBehaviour
         {
             // Videodaki kodun birebir aynısı (Model tersse PlayerVisual'ın altındaki civciv modelini elle 180 derece döndürün)
             _playerVisuals.forward = Vector3.Slerp(_playerVisuals.forward, inputDirection.normalized, Time.deltaTime * _rotationSpeed);
+        }
+
+        // --- DURUM (STATE) GÜNCELLEMESİ ---
+        UpdatePlayerState();
+    }
+
+    private void UpdatePlayerState()
+    {
+        if (_stateController == null) return;
+
+        bool isMoving = _horizontalInput != 0f || _verticalInput != 0f;
+
+        if (!_isGrounded)
+        {
+            // Havadayken
+            _stateController.ChangeState(PlayerState.Jump);
+        }
+        else if (_isSlidingMode)
+        {
+            // Eğer "SlideStart" süresi henüz bitmediyse, start oynat.
+            if (_slideStartTimer > 0)
+            {
+                _stateController.ChangeState(PlayerState.SlideStart);
+            }
+            else
+            {
+                // Süre bittiyse asıl Slide döngüsüne gir
+                _stateController.ChangeState(isMoving ? PlayerState.Slide : PlayerState.SlideIdle);
+            }
+        }
+        else
+        {
+            // Normal Moddayken
+            _stateController.ChangeState(isMoving ? PlayerState.Move : PlayerState.Idle);
         }
     }
 

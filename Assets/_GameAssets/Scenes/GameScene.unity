@@ -675,9 +675,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 574f0b07eb8744b4e888591382501683, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ThirdPersonCameraController
-  _orientation: {fileID: 0}
-  _player: {fileID: 0}
-  _playerVisuals: {fileID: 0}
+  _orientation: {fileID: 1245339867}
+  _player: {fileID: 1557331267}
+  _playerVisuals: {fileID: 6280404808458344155}
   _rb: {fileID: 0}
 --- !u!1 &410087039
 GameObject:
@@ -1835,7 +1835,9 @@ GameObject:
   - component: {fileID: 1557331267}
   - component: {fileID: 1557331266}
   - component: {fileID: 1557331265}
+  - component: {fileID: 1557331270}
   - component: {fileID: 1557331268}
+  - component: {fileID: 1557331269}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -1923,9 +1925,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NewMonoBehaviourScript
   _orientationTransform: {fileID: 1245339867}
-  _moveSpeed: 30
+  _moveSpeed: 10
   _jumpForce: 8
-  _rotationSpeed: 15
+  _rotationSpeed: 8
   _playerVisuals: {fileID: 6280404808458344155}
   _modelRotationOffset: 0
   _forwardKey: 37
@@ -1940,9 +1942,43 @@ MonoBehaviour:
   _normalModeKey: 31
   _slidingModeKey: 19
   _slideMultiplier: 0.65
+  _slideStartDuration: 30
   _normalDrag: 5
-  _slideDrag: 1
-  _airDrag: 0
+  _slideDrag: 0.2
+  _airDrag: 0.75
+--- !u!114 &1557331269
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1557331264}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 35f5cc0a491467e4f90ba60c0da206bf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::StateController
+--- !u!114 &1557331270
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1557331264}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cfa888ca065d97b49a5182d37be901af, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerAnimationController
+  _animator: {fileID: 6657351906561674338}
+  _stateController: {fileID: 1557331269}
+  _idleAnimName: PlayerIdle
+  _moveAnimName: PlayerMove
+  _jumpAnimName: PlayerJump
+  _slideStartAnimName: PlayerSlideStart
+  _slideIdleAnimName: PlayerSlideIdle
+  _slideAnimName: PlayerSlide
+  _transitionDuration: 0.15
 --- !u!1 &1915382675
 GameObject:
   m_ObjectHideFlags: 0
@@ -2517,7 +2553,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7003715408139115911}
   m_Layer: 0
-  m_Name: root
+  m_Name: Root
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2532,6 +2568,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6280404808458344155}
+  - component: {fileID: 6657351906561674338}
   m_Layer: 0
   m_Name: PlayerVisual
   m_TagString: Untagged
@@ -2539,6 +2576,28 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!95 &6657351906561674338
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6657351906561674337}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 0f4d84c15e5637f459f5b80cd4203531, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!4 &7003715408139115911
 Transform:
   m_ObjectHideFlags: 0
