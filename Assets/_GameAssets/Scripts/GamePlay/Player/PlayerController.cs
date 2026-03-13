@@ -126,7 +126,10 @@ public class PlayerController : MonoBehaviour
     {
         if (_stateController == null) return;
 
-        bool isMoving = _horizontalInput != 0f || _verticalInput != 0f;
+        // Karakterin fiziksel olarak bir hızı var mı? (0.1 bir eşik değeridir, ufak kaymaları görmezden gelir)
+        // Y eksenini (zıplamayı) hesaba katmamak için sadece X ve Z hızına bakıyoruz.
+        Vector3 planarVelocity = new Vector3(_playerRigidbody.linearVelocity.x, 0f, _playerRigidbody.linearVelocity.z);
+        bool isMoving = planarVelocity.magnitude > 0.1f || _horizontalInput != 0f || _verticalInput != 0f;
 
         if (!_isGrounded)
         {
