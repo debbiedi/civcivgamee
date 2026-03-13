@@ -177,5 +177,35 @@ public class PlayerController : MonoBehaviour
         _playerRigidbody.linearVelocity = new Vector3(_playerRigidbody.linearVelocity.x, 0f, _playerRigidbody.linearVelocity.z);
         _playerRigidbody.AddForce(transform.up * _jumpForce, ForceMode.Impulse);
     }
+
+    #region PowerUp Effects (Buffs & Debuffs)
+    
+    public void MultiplySpeed(float multiplier, float duration)
+    {
+        StartCoroutine(SpeedModifierCoroutine(multiplier, duration));
+    }
+
+    private System.Collections.IEnumerator SpeedModifierCoroutine(float multiplier, float duration)
+    {
+        float originalSpeed = _moveSpeed;
+        _moveSpeed *= multiplier; // Hızı çarp
+        yield return new WaitForSeconds(duration); // Belirtilen süre kadar bekle
+        _moveSpeed = originalSpeed; // Hızı eski haline döndür
+    }
+
+    public void MultiplyJumpForce(float multiplier, float duration)
+    {
+        StartCoroutine(JumpModifierCoroutine(multiplier, duration));
+    }
+
+    private System.Collections.IEnumerator JumpModifierCoroutine(float multiplier, float duration)
+    {
+        float originalJump = _jumpForce;
+        _jumpForce *= multiplier; // Zıplama gücünü çarp
+        yield return new WaitForSeconds(duration); // Belirtilen süre kadar bekle
+        _jumpForce = originalJump; // Zıplama gücünü eski haline döndür
+    }
+    
+    #endregion
 }
 
